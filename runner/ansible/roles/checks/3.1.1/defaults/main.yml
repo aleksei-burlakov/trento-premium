@@ -1,0 +1,20 @@
+---
+
+name: 3.1.1
+group: OS and package versions
+labels: hana
+description: |
+  Test if the used emacs version is supported
+remediation: |
+  ## Abstract
+  You need at emacs 25.3.1
+
+  ## Remediation
+  Please install or upgrade to a supported emacs version
+
+  ## Reference
+  - https://documentation.suse.com/en-us/sbp/all/single-html/SLES4SAP-hana-sr-guide-PerfOpt-15/
+implementation: "{{ lookup('file', 'roles/checks/'+name+'/tasks/main.yml') }}"
+
+# check id. This value must not be changed over the life of this check
+id: D028B9
