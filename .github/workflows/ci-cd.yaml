@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - name: Compress the checks
         run: |
-          tar czf trento-premium-checks.tgz
+          tar czf trento-premium-checks.tgz runner
                
       - uses: actions/upload-artifact@v2
         with:
