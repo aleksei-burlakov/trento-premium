@@ -1,0 +1,44 @@
+name: Continous Integration and Demo Deployment
+on:
+  push:
+    tags-ignore:
+      - '*'
+    branches:
+      - 'master'
+  pull_request:
+  release:
+    types: [published]
+
+jobs:
+  package:
+    runs-on: ubuntu-20.04    
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Compress the checks
+        run: |
+          tar czf trento-premium-checks.tgz
+               
+      - uses: actions/upload-artifact@v2
+        with:
+          name: trento-premium-checks
+          path: |
+                  trento-premium-checks.tgz
+
+  release-rolling:
+    needs: package
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/master')
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: trento-premium-checks
+      - uses: "marvinpinto/action-automatic-releases@v1.2.1"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "rolling"
+          prerelease: true
+          title: "Cutting Edge"
+          files: |
+            trento-premium-checks.tgz
