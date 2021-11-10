@@ -1,14 +1,9 @@
 ---
 
-- name: Gather the package facts
-  ansible.builtin.package_facts:
-    manager: auto
-
 - block:
-    - name: Post results
+    - name: "{{ name }} Post results"
       import_role:
         name: post-results
-  when:
-    - ansible_check_mode
+
   vars:
-    status: "{{ emacs is version('25.3.1', '>=') }}"
+    status: "{{ 'emacs' in ansible_facts.packages and ansible_facts.packages['ansible'][0].version is version(expected[name], '>=') }}"
