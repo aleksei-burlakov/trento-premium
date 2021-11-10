@@ -4,11 +4,23 @@
   ansible.builtin.package_facts:
     manager: auto
 
+- name: Print emacs version
+  debug:
+    msg: "{{ ansible_facts.packages['emacs'][0].version }}" 
+  when: "{{ 'emacs' in ansible_facts.packages }}"
+
+- name: "{{ name }} Assert"
+  assert:
+    that:
+      - "{{  'emacs' in ansible_facts.packages and ansible_facts.packages['emacs'][0].version is version(expected[name], '>=')  }}"
+  loop: "{{ group_names }}"
+  register: emacs_version
+  changed_when: emacs_version.failed
+
+
 - block:
     - name: Post results
       import_role:
         name: post-results
-  when:
-    - ansible_check_mode
   vars:
-    status: "{{ emacs is version('25.3.1', '>=') }}"
+    status: "{{ emacs_version is not changed  }}"
