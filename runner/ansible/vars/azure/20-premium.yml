@@ -1,0 +1,6 @@
+---
+
+expected_premium:
+  "3.1.1": "25.3"
+
+expected: "{{ expected_core | combine(expected_premium) }}"
